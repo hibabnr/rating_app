@@ -1,0 +1,262 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Hôte : 127.0.0.1
+-- Généré le : ven. 12 juil. 2024 à 18:11
+-- Version du serveur : 10.4.32-MariaDB
+-- Version de PHP : 8.0.30
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de données : rating
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table project
+--
+
+CREATE TABLE project (
+  id int(11) NOT NULL,
+  name varchar(50) NOT NULL,
+@@ -7,51 +35,68 @@ CREATE TABLE project (
+  team varchar(500) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_general_ci;
+
+--
+-- Déchargement des données de la table project
+--
+
+INSERT INTO project (id, name, description, github, team) VALUES
+(1, 'Rating Application', 'Rating application description to rate developers projects', 'gitlink', 'mobile developer');
+(1, 'Rating Application', 'Rating application description to rate developers projects', 'gitlink', 'mobile developer'),
+(2, 'Test Project', 'desc test project', 'https://atomic.com', 'Both');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table task
+--
+
+CREATE TABLE task (
+  id int(11) NOT NULL,
+  name varchar(50) NOT NULL,
+  description varchar(500) NOT NULL,
+  developer_name varchar(50) NOT NULL,
+  deadline timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  project_name varchar(50) NOT NULL,
+  branch varchar(256) NOT NULL
+  deadline timestamp NOT NULL DEFAULT current_timestamp(),
+  project int(11) NOT NULL,
+  developer int(11) NOT NULL,
+  branch varchar(256) DEFAULT NULL,
+  submition_date timestamp NULL DEFAULT NULL,
+  status int(11) NOT NULL DEFAULT 2
+) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_general_ci;
+
+--
+-- Déchargement des données de la table task
+INSERT INTO task (id, name, description, developer_name, deadline, project_name, branch) VALUES
+(2, 'Designing interfaces', 'Designing interfaces description', 'amina benachour', '2024-07-03 12:11:18', 'Rating Application', 'main');
+--
+
+INSERT INTO task (id, name, description, deadline, project, developer, branch, submition_date, status) VALUES
+(8, 'fsfasfa', 'fasfasfas', '2024-07-12 14:10:08', 1, 1, NULL, NULL, 2),
+(9, 'qweqerqwrqw', 'fasfasfasdsadas', '2024-07-12 14:10:10', 2, 1, NULL, NULL, 2),
+(10, 'qwwwwwwww', 'wwwwwwwwwwwww', '2024-07-12 14:16:43', 2, 1, NULL, NULL, 2),
+(11, 'qwwwwwwww', 'wwwwwwwwwwwww', '2024-07-12 14:16:45', 2, 1, NULL, NULL, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table task_status
+--
+
+CREATE TABLE task_status (
+  id int(11) NOT NULL,
+  status varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_general_ci;
+
+--
+-- Déchargement des données de la table task_status
+--
+
+INSERT INTO task_status (id, status) VALUES
+(1, 'Accepted'),
+(2, 'Pending'),
+(3, 'Refused');
+
+-- Structure de la table task_submition
+CREATE TABLE task_submition (
+  id int(11) NOT NULL,
+  task int(11) NOT NULL,
+  user_id int(11) NOT NULL,
+  submition_date timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  status int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_general_ci;
+
+-- Déchargement des données de la table task_submition
+INSERT INTO task_submition (id, task, user_id, submition_date, status) VALUES
+(1, 2, 1, '2024-07-03 12:11:37', 1);
+-- --------------------------------------------------------
+
+--
+-- Structure de la table user
+--
+
+CREATE TABLE user (
+  id int(11) NOT NULL,
+  first_name varchar(50) NOT NULL,
+@@ -62,73 +107,126 @@ CREATE TABLE user (
+  points int(11) NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_general_ci;
+
+--
+-- Déchargement des données de la table user
+--
+
+INSERT INTO user (id, first_name, last_name, type, email, password, points) VALUES
+(1, 'BIROUK', 'Mohamed Abderrahmane', 1, 'wadoudbirouk9@gmail.com', '$2a$10$xfFK5cLgCxTkH7pBJuXV7uIz4TbZrV0E3E850FLXMTr4yx2wrFqo.', 27),
+(2, 'Smira', 'Anis', 1, 'smiraanis45@gmail.com', '$2b$10$9xGS7dXt0Ut0s2ErT2cdG.DlUW8udiVLiQZUaWoIQLRgmnoqyU8M.', 0);
+(2, 'Smira', 'Anis', 2, 'smiraanis45@gmail.com', '$2b$10$9xGS7dXt0Ut0s2ErT2cdG.DlUW8udiVLiQZUaWoIQLRgmnoqyU8M.', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table user_type
+--
+
+CREATE TABLE user_type (
+  id int(11) NOT NULL,
+  type varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf32 COLLATE=utf32_general_ci;
+
+--
+-- Déchargement des données de la table user_type
+--
+
+INSERT INTO user_type (id, type) VALUES
+(1, 'Admin'),
+(2, 'Web Developer'),
+(3, 'Mobile Developer');
+
+--
+-- Index pour les tables déchargées
+--
+
+--
+-- Index pour la table project
+--
+ALTER TABLE project
+  ADD PRIMARY KEY (id);
+
+--
+-- Index pour la table task
+--
+ALTER TABLE task
+  ADD PRIMARY KEY (id);
+  ADD PRIMARY KEY (id),
+  ADD KEY status (status),
+  ADD KEY project (project),
+  ADD KEY developer (developer);
+
+--
+-- Index pour la table task_status
+--
+ALTER TABLE task_status
+  ADD PRIMARY KEY (id);
+
+ALTER TABLE task_submition
+  ADD PRIMARY KEY (id),
+  ADD KEY task (task),
+  ADD KEY user_id (user_id),
+  ADD KEY status (status);
+
+--
+-- Index pour la table user
+--
+ALTER TABLE user
+  ADD PRIMARY KEY (id),
+  ADD UNIQUE KEY email (email),
+  ADD KEY type (type);
+
+--
+-- Index pour la table user_type
+--
+ALTER TABLE user_type
+  ADD PRIMARY KEY (id);
+
+--
+-- AUTO_INCREMENT pour les tables déchargées
+--
+
+--
+-- AUTO_INCREMENT pour la table project
+--
+ALTER TABLE project
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- AUTO_INCREMENT pour la table task
+--
+ALTER TABLE task
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT pour la table task_status
+--
+ALTER TABLE task_status
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+ALTER TABLE task_submition
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT pour la table user
+--
+ALTER TABLE user
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT pour la table user_type
+--
+ALTER TABLE user_type
+  MODIFY id int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- Contraintes pour les tables déchargées
+ALTER TABLE task_submition
+  ADD CONSTRAINT task_submition_ibfk_1 FOREIGN KEY (task) REFERENCES task (id),
+  ADD CONSTRAINT task_submition_ibfk_2 FOREIGN KEY (status) REFERENCES task_status (id),
+  ADD CONSTRAINT task_submition_ibfk_3 FOREIGN KEY (user_id) REFERENCES user (id);
+--
+
+--
+-- Contraintes pour la table task
+--
+ALTER TABLE task
+  ADD CONSTRAINT task_ibfk_1 FOREIGN KEY (status) REFERENCES task_status (id),
+  ADD CONSTRAINT task_ibfk_2 FOREIGN KEY (project) REFERENCES project (id),
+  ADD CONSTRAINT task_ibfk_3 FOREIGN KEY (developer) REFERENCES user (id);
+
+--
+-- Contraintes pour la table user
+--
+ALTER TABLE user
+  ADD CONSTRAINT user_ibfk_1 FOREIGN KEY (type) REFERENCES user_type (id);
+
+COMMIT;
